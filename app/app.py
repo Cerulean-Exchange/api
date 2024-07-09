@@ -23,6 +23,7 @@ from app.settings import (
 from app.supply import Supply
 from app.viri import ViriPrice
 from app.venfts import Accounts
+from app.voter import Voters
 
 middleware = [
     CompressionMiddleware(),
@@ -47,6 +48,7 @@ app.add_route("/api/v1/pairs", Pairs())
 app.add_route("/api/v1/supply", Supply())
 app.add_route("/api/v1/circulating-supply", CirculatingSupply())
 app.add_route("/api/v1/viri-price", ViriPrice())
+app.add_route("/api/v1/voters", Voters())
 
 wsgi = WSGILogger(app, [StreamHandler(sys.stdout)], ApacheFormatter())
 
