@@ -37,12 +37,11 @@ class Voters(object):
             LOGGER.info("Voters: %s", voters_str)
             voters_json = json.loads(voters_str)
             if voters_json["total_votes"] == 0:
-                LOGGER.warning("Voters cache is empty or zero. Recaching...")
-                voters = self.recache()
-            else:
-                resp.status = falcon.HTTP_200
+                LOGGER.warning("Voters cache is zero. Recaching...")
+                voters_json = self.recache()
         else:
             LOGGER.warning("Voters not found in cache!")
-            voters = self.recache()
+            voters_json = self.recache()
 
-        resp.media = voters
+        resp.media = voters_json
+        resp.status = falcon.HTTP_200
