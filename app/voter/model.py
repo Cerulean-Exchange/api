@@ -1,6 +1,7 @@
 from walrus import FloatField, Model
+from multicall import Call, Multicall
 from app.pairs import Pairs
-from app.settings import CACHE, LOGGER
+from app.settings import CACHE, LOGGER, MINTER_ADDRESS, VOTER_ADDRESS
 
 class Voters(Model):
     """Model to calculate and store the total votes information."""
@@ -26,3 +27,29 @@ class Voters(Model):
         except Exception as e:
             LOGGER.error(f"Error in calc_total_votes: {e}")
             return 0
+        
+    @classmethod
+    def get_votes_casted(cls):
+        LOGGER.debug("Starting the get_active_period...")
+        try:
+            
+            initial_data_multicall = Multicall(
+                [
+                    Call(VOTER_ADDRESS, 'length()(uint256)', [['total_ids', None]]),
+                    Call(MINTER_ADDRESS, 'activePeriod()(uint256)', [['active_period', None]])
+                ]
+            )
+            
+            initial_data = initial_data_multicall()
+            total_ids = initial_data['total_ids']
+            active_period = initial_data['active_period']
+            
+            LOGGER.debug(f"Total ids: {total_ids}")
+            LOGGER.debug(f"Active period: {active_period}")
+            
+            return total_ids
+            
+        except Exception as e:
+            LOGGER.error(f"Error in calc_total_votes: {e}")
+            return 9980
+        

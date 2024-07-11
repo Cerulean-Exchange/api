@@ -9,9 +9,13 @@ class Voters(object):
     @classmethod
     def sync(cls):
         total_votes = VotersModel.calc_total_votes()
+        votes_casted = VotersModel.get_votes_casted()
         CACHE.set(
             cls.CACHE_KEY,
-            json.dumps({"total_votes": total_votes}),
+            json.dumps({
+                "total_votes": total_votes,
+                "votes_casted": votes_casted
+            }),
         )
         CACHE.expire(cls.CACHE_KEY, TOKEN_CACHE_EXPIRATION)
 
@@ -19,8 +23,13 @@ class Voters(object):
     def recache(cls):
         LOGGER.info("Voters recache starting...")
         try:
+            #
             total_votes = VotersModel.calc_total_votes()
-            voters = {"total_votes": total_votes}
+            votes_casted = VotersModel.get_votes_casted()
+            voters = {
+                "total_votes": total_votes,
+                "votes_casted": votes_casted
+            }
             CACHE.set(cls.CACHE_KEY, json.dumps(voters))
             LOGGER.debug("Cache updated for %s.", cls.CACHE_KEY)
             return voters
