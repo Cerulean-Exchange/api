@@ -17,8 +17,9 @@ class Assets(object):
 
     @classmethod
     def sync(cls):
+        LOGGER.debug("Start Assets Sync")
         Tokens = Token.from_tokenlists()
-
+        LOGGER.info("Token list: %s", str(Tokens))
         serializable_tokens = [
             tok._data for tok in Tokens if tok._data["logoURI"] is not None
         ]
@@ -70,7 +71,13 @@ class Assets(object):
         """Caches and returns our assets"""
         assets = CACHE.get(self.CACHE_KEY)
         if assets:
-            resp.status = falcon.HTTP_200
+            assets_str = assets.decode('utf-8')
+            LOGGER.info("Assets: %s", assets_str)
+            if assets_str == '{"data": []}':
+                LOGGER.warning("Assets cache is empty. Recaching...")
+                assets = Assets.recache()
+            else:
+                resp.status = falcon.HTTP_200
         else:
             LOGGER.warning("Assets not found in cache!")
             assets = Assets.recache()

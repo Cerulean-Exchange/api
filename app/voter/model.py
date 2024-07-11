@@ -1,5 +1,5 @@
 from walrus import FloatField, Model
-from app.pairs import Pair
+from app.pairs import Pairs
 from app.settings import CACHE, LOGGER
 
 class Voters(Model):
@@ -11,7 +11,7 @@ class Voters(Model):
     def calc_total_votes(cls):
         LOGGER.debug("Starting the total votes calculation...")
         try:
-            pairs_data = Pair.serialize()
+            pairs_data = Pairs.serialize()
             
             total_votes = 0
             for pair in pairs_data:
