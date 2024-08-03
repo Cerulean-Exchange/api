@@ -9,12 +9,13 @@ class Voters(object):
     @classmethod
     def sync(cls):
         total_votes = VotersModel.calc_total_votes()
-        votes_casted = VotersModel.get_votes_casted()
+        votes_casted_data = VotersModel.get_votes_casted()
         CACHE.set(
             cls.CACHE_KEY,
             json.dumps({
                 "total_votes": total_votes,
-                "votes_casted": votes_casted
+                "votes_casted": votes_casted_data['votes_casted'],
+                "voted_ids": votes_casted_data['voted_ids']
             }),
         )
         CACHE.expire(cls.CACHE_KEY, TOKEN_CACHE_EXPIRATION)
@@ -23,12 +24,12 @@ class Voters(object):
     def recache(cls):
         LOGGER.info("Voters recache starting...")
         try:
-            #
             total_votes = VotersModel.calc_total_votes()
-            votes_casted = VotersModel.get_votes_casted()
+            votes_casted_data = VotersModel.get_votes_casted()
             voters = {
                 "total_votes": total_votes,
-                "votes_casted": votes_casted
+                "votes_casted": votes_casted_data['votes_casted'],
+                "voted_ids": votes_casted_data['voted_ids']
             }
             CACHE.set(cls.CACHE_KEY, json.dumps(voters))
             LOGGER.debug("Cache updated for %s.", cls.CACHE_KEY)
@@ -37,7 +38,11 @@ class Voters(object):
             LOGGER.error(
                 f"Error with the recache balance: {e}"
             )
-            return 10
+            return {
+                "total_votes": 0,
+                "votes_casted": 9980,
+                "voted_ids": []
+            }
 
     def on_get(self, req, resp):
         voters = CACHE.get(self.CACHE_KEY)
