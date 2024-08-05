@@ -14,6 +14,7 @@ from app.settings import (
     reset_multicall_pool_executor,
 )
 from app.viri import ViriPrice
+from app.voter import Voters
 
 
 class Syncer:
@@ -58,6 +59,10 @@ class Syncer:
     @staticmethod
     def sync_viri():
         Syncer.sync_with_cache("viri:json", "VIRI price", ViriPrice.sync)
+        
+    @staticmethod
+    def sync_voters():
+        Syncer.sync_with_cache("voters:json", "Voters", Voters.sync)
 
     @staticmethod
     def sync():
@@ -81,6 +86,9 @@ class Syncer:
 
         Syncer.sync_viri()
         t7 = time.time()
+        
+        Syncer.sync_voters()  # Nueva línea para sincronizar voters
+        t8 = time.time()
 
         LOGGER.info("Syncing tokens data done in %s seconds.", t1 - t0)
         LOGGER.info("Syncing pairs data done in %s seconds.", t2 - t1)
@@ -88,7 +96,8 @@ class Syncer:
         LOGGER.info("Syncing configuration data done in %s seconds.", t5 - t4)
         LOGGER.info("Syncing supply data done in %s seconds.", t6 - t5)
         LOGGER.info("Syncing viri data done in %s seconds.", t7 - t6)
-        LOGGER.info("Total syncing time: %s seconds.", t7 - t0)
+        LOGGER.info("Syncing voters data done in %s seconds.", t8 - t7)
+        LOGGER.info("Total syncing time: %s seconds.", t8 - t0)
 
         reset_multicall_pool_executor()
 
