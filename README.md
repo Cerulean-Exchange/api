@@ -1,8 +1,8 @@
 # Cerulean Finance HTTP API 
 
-[![Latest tag](https://github.com/Viridian-Labs/api/blob/main/.github/workflows/tag-ci.yml)]
+[![Latest tag](https://github.com/Cerulean-Labs/api/blob/main/.github/workflows/tag-ci.yml)]
 
-The Viridian Finance HTTP API facilitates the fetching of tokens, liquidity pool pairs, and other associated data for our application.
+The Cerulean Finance HTTP API facilitates the fetching of tokens, liquidity pool pairs, and other associated data for our application.
 
 Ensure you have [Docker](https://docs.docker.com/install/) installed before proceeding.
 
