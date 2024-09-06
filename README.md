@@ -1,4 +1,4 @@
-# Viridian Finance HTTP API 
+# Cerulean Finance HTTP API 
 
 [![Latest tag](https://github.com/Viridian-Labs/api/blob/main/.github/workflows/tag-ci.yml)]
 
